@@ -34,7 +34,7 @@ spotify, identify = load_and_clean()
 
 def knn_predictor(audio_feats, k=20):
     """
-    similar_song_ids, visual_df = knn_predictor(audio_features)
+    differences_df = knn_predictor(audio_features)
     """
     # Scale the data with standard scaler
     scaler = StandardScaler()
