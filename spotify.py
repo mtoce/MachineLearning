@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import pickle
+from joblib import dump
 from sklearn.preprocessing import StandardScaler
 from sklearn.neighbors import NearestNeighbors
 from sklearn.cluster import KMeans
@@ -47,16 +48,20 @@ def knn_predictor(audio_feats, k=20):
     knn.fit(spotify_scaled)
 
     # pickle the model for later use
-    filename = 'knn_model.sav'
-    pickle.dump(knn, open(filename, 'wb'))
+    # filename = 'knn_model.sav'
+    # pickle.dump(knn, open(filename, 'wb'))
 
-    loaded_model = pickle.load(open(filename, 'rb'))
+    # loaded_model = pickle.load(open(filename, 'rb'))
+
+    # JOBLIB dump
+    dump(knn, 'knn.joblib', compress=True)
+    
     # make prediction 
-    prediction = loaded_model.kneighbors(audio_feats_scaled)
+    prediction = knn.kneighbors(audio_feats_scaled)
 
     # create an index for similar songs
     similar_songs_index = prediction[1][0][:k].tolist()
-    
+
     # Create an empty list to store simlar song names
     similar_song_ids = []
     similar_song_names = []
@@ -95,7 +100,7 @@ def knn_predictor(audio_feats, k=20):
         diff = abs(similar_feats_scaled_df.iloc[i] - audio_feats_scaled_df.iloc[0])
         # print('type: ', type(similar_feats_scaled_df.iloc[i]))
         diff_df.loc[i] = diff
-    
+
     # add sums of differences 
     diff_df['sum'] = diff_df.sum(axis=1)
     diff_df = diff_df.sort_values(by=['sum'])
