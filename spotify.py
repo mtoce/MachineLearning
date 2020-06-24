@@ -49,16 +49,10 @@ def knn_predictor(audio_feats, k=100):
     knn = NearestNeighbors(n_neighbors=k, algorithm='kd_tree')
     knn.fit(spotify_scaled)
 
-    # pickle the model for later use
-    # filename = 'knn_model.sav'
-    # pickle.dump(knn, open(filename, 'wb'))
-
-    # loaded_model = pickle.load(open(filename, 'rb'))
-
     # JOBLIB dump
-    # dump(knn, 'knn.joblib', compress=True)
+    dump(knn, 'knn_final.joblib', compress=True)
     
-    # make prediction 
+    # make prediction
     prediction = knn.kneighbors(audio_feats_scaled)
 
     # create an index for similar songs
