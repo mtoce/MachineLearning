@@ -63,7 +63,7 @@ def knn_predictor(audio_feats, k=100):
 
     # create an index for similar songs
     similar_songs_index = prediction[1][0][:25].tolist()
-    breakpoint()
+    
     # Create an empty list to store simlar song names
     similar_song_ids = []
     similar_song_names = []
@@ -116,19 +116,24 @@ def knn_predictor(audio_feats, k=100):
     cols.insert(0, cols.pop(cols.index('track_id')))
     diff_df = diff_df.loc[:, cols]
 
+    # Remove the suggestion of the same song (all 0's)
+    diff_df = diff_df[~(diff_df == 0).any(axis=1)]
+
     # Grab only the unique 10 songs
     diff_df = diff_df.drop_duplicates(subset=['sum'])[:10]
+
+    diff_df = diff_df.reset_index(drop=True)
+
 
     return diff_df
 
 
-# DUMMY DATA
-test_audio_features = [0.5, 0.5, 0.5, 0.1, 0.25, -5.0, 125, 0.5]
+worst_nites = spotify.iloc[77647].tolist()
 
-# INSTANTIATE MODEL
+test_audio_features = worst_nites
+
 diff_df = knn_predictor(test_audio_features)
 
 diff_json = diff_df.to_json(orient='records')
 
-
-print(diff_df)
+print(diff_json)
