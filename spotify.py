@@ -12,22 +12,15 @@ def load_and_clean():
     """
     spotify, identify = load_and_clean()
     """
-    spotify = pd.read_csv('SpotifyFeatures.csv')
+    spotify = pd.read_csv('spotify_final.csv')
 
     # dataframe that serves to identify songs
     identify = spotify[['artist_name', 'track_id', 'track_name']]
 
     # dataframe consisting of audio features we want to train on
-    spotify = spotify.drop(columns = ['genre',
-                                    'mode',
-                                    'time_signature',
-                                    'key',
-                                    'track_id',
+    spotify = spotify.drop(columns = ['track_id',
                                     'artist_name',
-                                    'popularity',
-                                    'track_name',
-                                    'duration_ms',
-                                    'speechiness'])
+                                    'track_name'])
 
     return spotify, identify
 
