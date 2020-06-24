@@ -6,6 +6,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.neighbors import NearestNeighbors
 from sklearn.cluster import KMeans
 import json
+from sklearn.pipeline import make_pipeline
 
 def load_and_clean():
     """
@@ -32,10 +33,11 @@ def load_and_clean():
 
 spotify, identify = load_and_clean()
 
-def knn_predictor(audio_feats, k=20):
+def knn_predictor(audio_feats, k=100):
     """
     differences_df = knn_predictor(audio_features)
     """
+
     # Scale the data with standard scaler
     scaler = StandardScaler()
     spotify_scaled = scaler.fit_transform(spotify)
@@ -54,14 +56,14 @@ def knn_predictor(audio_feats, k=20):
     # loaded_model = pickle.load(open(filename, 'rb'))
 
     # JOBLIB dump
-    dump(knn, 'knn.joblib', compress=True)
+    # dump(knn, 'knn.joblib', compress=True)
     
     # make prediction 
     prediction = knn.kneighbors(audio_feats_scaled)
 
     # create an index for similar songs
-    similar_songs_index = prediction[1][0][:k].tolist()
-
+    similar_songs_index = prediction[1][0][:25].tolist()
+    breakpoint()
     # Create an empty list to store simlar song names
     similar_song_ids = []
     similar_song_names = []
@@ -96,7 +98,7 @@ def knn_predictor(audio_feats, k=20):
     # get the % difference between the outputs and input songs
     col_names = similar_feats_scaled_df.columns.to_list()
     diff_df = pd.DataFrame(columns=col_names)
-    for i in range(k):
+    for i in range(25):
         diff = abs(similar_feats_scaled_df.iloc[i] - audio_feats_scaled_df.iloc[0])
         # print('type: ', type(similar_feats_scaled_df.iloc[i]))
         diff_df.loc[i] = diff
@@ -119,7 +121,11 @@ def knn_predictor(audio_feats, k=20):
 
     return diff_df
 
+
+# DUMMY DATA
 test_audio_features = [0.5, 0.5, 0.5, 0.1, 0.25, -5.0, 125, 0.5]
+
+# INSTANTIATE MODEL
 diff_df = knn_predictor(test_audio_features)
 
 diff_json = diff_df.to_json(orient='records')
