@@ -12,7 +12,11 @@ def load_and_clean():
     """
     spotify, identify = load_and_clean()
     """
-    spotify = pd.read_csv('https://raw.githubusercontent.com/BW-pilot/MachineLearning/master/spotify_final.csv')
+    spotify = pd.read_csv('https://raw.githubusercontent.com/BW-pilot/MachineLearning/master/CSVs/spotify_final.csv')
+
+    spotify = spotify.drop(columns=['Unnamed: 0'], axis=1)
+
+    spotify.to_csv('spotify_final.csv', index=False)
 
     # dataframe that serves to identify songs
     identify = spotify[['artist_name', 'track_id', 'track_name']]
@@ -21,6 +25,8 @@ def load_and_clean():
     spotify = spotify.drop(columns = ['track_id',
                                     'artist_name',
                                     'track_name'])
+
+    
 
     return spotify, identify
 
