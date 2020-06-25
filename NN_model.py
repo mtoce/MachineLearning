@@ -84,10 +84,12 @@ worst_nites = df.iloc[77647].tolist()
 test_audio_features = worst_nites
 # test_audio_features = [0.5,	0.7, 0.7, 0.0, 3, 0.1, -3, 0.03, 130, 0.9, '6oXghnUUe9u2iIZPNfCxjl']   
 
+# get results from first song in database
 results_1 = get_results(df.iloc[0], df, amount=5)
 print('-------------------------')
 print(results_1)
 
+# get results from test_audio features, which is actually the song Worst Nites by Foster the People
 results_2 = get_results(test_audio_features, df, amount=10)
 print('-------------------------')
 print(results_2)
